@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SportsStore.Models.Domain;
 using SportsStore.Data.Repositories;
 using SportsStore.Filters;
+using System.Security.Claims;
 
 namespace SportsStore {
     public class Startup {
@@ -37,6 +38,10 @@ namespace SportsStore {
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddAuthorization(options => {
+                options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+                options.AddPolicy("Customer", policy => policy.RequireClaim(ClaimTypes.Role, "Customer"));
+            });
             services.AddScoped<SportsStoreDataInitializer>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();

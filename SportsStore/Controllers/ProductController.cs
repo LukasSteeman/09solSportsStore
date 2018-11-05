@@ -5,8 +5,10 @@ using SportsStore.Models.ProductViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using SportsStore.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SportsStore.Controllers {
+    [Authorize(Policy = "Admin")]
     public class ProductController : Controller {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
