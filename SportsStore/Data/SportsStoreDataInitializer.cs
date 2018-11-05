@@ -1,16 +1,20 @@
-﻿using SportsStore.Models.Domain;
+﻿using Microsoft.AspNetCore.Identity;
+using SportsStore.Models.Domain;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SportsStore.Data {
     public class SportsStoreDataInitializer {
         private readonly ApplicationDbContext _dbContext;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public SportsStoreDataInitializer(ApplicationDbContext dbContext) {
+        public SportsStoreDataInitializer(ApplicationDbContext dbContext, UserManager<IdentityUser> userManager) {
             _dbContext = dbContext;
+            _userManager = userManager;
         }
 
-        public void InitializeData() {
+        public async Task InitializeData() {
             _dbContext.Database.EnsureDeleted();
             if (_dbContext.Database.EnsureCreated()) {
                 Category watersports = new Category("WaterSports");
@@ -42,6 +46,8 @@ namespace SportsStore.Data {
                 Random r = new Random();
                 for (int i = 1; i < 10; i++) {
                     Customer klant = new Customer("student" + i, "Student" + i, "Jan", "Nieuwstraat 10", cities[r.Next(2)]);
+                    var userName = klant.CustomerName + "@hogent.be";
+                    await CreateUser(userName, userName, "P@ssword1");
 
                     if (i <= 5) {
                         Cart cart = new Cart();
@@ -51,8 +57,14 @@ namespace SportsStore.Data {
                     }
                     _dbContext.Customers.Add(klant);
                 }
+                await CreateUser("admin@sportsstore.be", "admin@sportsstore.be", "P@ssword1");
                 _dbContext.SaveChanges();
             }
+        }
+
+        private async Task CreateUser(string userName, string email, string password) {
+            var user = new IdentityUser { UserName = userName, Email = email };
+            await _userManager.CreateAsync(user, password);
         }
     }
 }
