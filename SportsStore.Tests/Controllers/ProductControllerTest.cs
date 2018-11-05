@@ -288,6 +288,12 @@ namespace SportsStore.Tests.Controllers {
             var result = _productController.DeleteConfirmed(_runningShoesId) as RedirectToActionResult;
             Assert.Equal("Index", result?.ActionName);
         }
+
+        [Fact]
+        public void DeleteHttpPost_ProductNotFound_ReturnsNotFound() {
+            var result = _productController.DeleteConfirmed(_nonExistingProductId);
+            Assert.IsType<NotFoundResult>(result);
+        }
         #endregion
     }
 }
