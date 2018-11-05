@@ -1,11 +1,15 @@
 ﻿using SportsStore.Models.Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace SportsStore.Models.ProductViewModels {
     public class EditViewModel {
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
+
+        [Display(Name = "In stock")]
         public bool InStock { get; set; }
+
         public int CategoryId { get; set; }
         public Availability Availability { get; set; }
 
