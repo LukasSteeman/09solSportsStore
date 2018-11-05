@@ -83,12 +83,13 @@ namespace SportsStore.Models.Domain {
         #endregion
 
         #region Methods
-        public void EditProduct(string name, string description, decimal price, bool inStock, Category category, Availability availability) {
+        public void EditProduct(string name, string description, decimal price, bool inStock, Category category, Availability availability, DateTime? availableTill) {
             Name = name;
             Description = description;
             Price = price;
             InStock = inStock;
             Availability = availability;
+            AvailableTill = availableTill;
             Category.RemoveProduct(this);
             Category = category;
             Category.AddProduct(this);
